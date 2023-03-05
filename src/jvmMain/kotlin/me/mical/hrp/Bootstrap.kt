@@ -9,7 +9,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
@@ -80,7 +79,7 @@ private fun loadConfig() {
     }
     var content = ""
     var connection: HttpURLConnection? = null
-    val config = try {
+    val remote = try {
         val timeout = 5000
         val url =
             URL("https://mcstarrysky.oss-cn-beijing.aliyuncs.com/School/hrp.json")
@@ -100,9 +99,14 @@ private fun loadConfig() {
             it.saveToFile(file)
         }
     } catch (_: IOException) {
-        Configuration.loadFromFile(file, type = Type.JSON)
+        Configuration.empty(type = Type.JSON)
     } finally {
         connection?.disconnect()
+    }
+    val config = Configuration.loadFromFile(file)
+    if (remote.saveToString() != config.saveToString()) {
+        remote.saveToFile(file)
+        config.reload()
     }
     for (key in config.getKeys(false)) {
         val number = key.toIntOrNull() ?: continue

@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "me.mical"
-version = "1.0-SNAPSHOT"
+version = "1.0.1"
 
 repositories {
     google()
@@ -50,7 +50,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "随机点名"
-            packageVersion = "1.0.0"
+            packageVersion = "1.0.1"
             windows.shortcut = true
         }
     }
