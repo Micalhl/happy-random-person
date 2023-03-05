@@ -105,6 +105,7 @@ private fun loadConfig() {
     }
     val config = Configuration.loadFromFile(file)
     if (remote.saveToString() != config.saveToString()) {
+        if (remote.saveToString() == "{}") return
         remote.saveToFile(file)
         config.reload()
     }
