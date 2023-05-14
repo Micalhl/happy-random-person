@@ -1,6 +1,5 @@
 import org.jetbrains.compose.compose
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("multiplatform")
@@ -8,7 +7,7 @@ plugins {
 }
 
 group = "me.mical"
-version = "1.0.2"
+version = "1.1"
 
 repositories {
     google()

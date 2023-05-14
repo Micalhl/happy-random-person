@@ -8,8 +8,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.useResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.*
+import androidx.compose.ui.window.MenuBar
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import taboolib.common.util.random
@@ -36,6 +39,13 @@ import kotlin.concurrent.timerTask
 @OptIn(ExperimentalUnitApi::class)
 @Composable
 @Preview
+fun Update() {
+    // TODO
+}
+
+@OptIn(ExperimentalUnitApi::class)
+@Composable
+@Preview
 fun App() {
     var tasking = false
     var text by remember { mutableStateOf("要点名了，别走神！") }
@@ -44,15 +54,50 @@ fun App() {
         Column(modifier = Modifier.fillMaxWidth().fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally) {
             Spacer(Modifier.height(200.dp))
             Text(text, style = TextStyle(fontSize = TextUnit(5f, TextUnitType.Em)))
-            Spacer(Modifier.height(200.dp))
+            Spacer(Modifier.height(150.dp))
             Button(onClick = {
                 //
                 tasking = !tasking
+                if (::end.isInitialized && end.isNotEmpty()) {
+                    text = end
+                }
                 button = if (tasking) "停止点名" else "开始点名"
             }) {
                 Text(
                     text = button
                 )
+            }
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                Button(onClick = {
+                    students[students.size + 1] = cheat
+                }) {
+                    Text(
+                        text = "千万别点"
+                    )
+                }
+                Spacer(Modifier.width(10.dp))
+                Button(onClick = {
+                    val delete = hashSetOf<Int>()
+                    for (key in students.keys()) {
+                        if (key > amount) {
+                            delete.add(key)
+                        }
+                    }
+                    delete.forEach { students.remove(it) }
+                    end = ""
+                }) {
+                    Text(
+                        text = "千万别点"
+                    )
+                }
+                Spacer(Modifier.width(10.dp))
+                Button(onClick = {
+                    end = text
+                }) {
+                    Text(
+                        text = "千万别点"
+                    )
+                }
             }
         }
     }
@@ -63,14 +108,19 @@ fun App() {
     }, 0, 50)
 }
 
-fun main() = application {
+fun main() {
     loadConfig()
-    Window(onCloseRequest = ::exitApplication, title = "随机点名") {
-        App()
+    application {
+        Window(onCloseRequest = ::exitApplication, title = "高一五班御用随机点名") {
+            App()
+        }
     }
 }
 
 val students = ConcurrentHashMap<Int, String>()
+lateinit var cheat: String
+var amount: Int = 0
+lateinit var end: String // initialize
 
 private fun loadConfig() {
     val file = File(System.getProperty("user.home"), "hrp.json")
@@ -107,8 +157,10 @@ private fun loadConfig() {
         remote.saveToFile(file)
         config.reload()
     }
-    for (key in config.getKeys(false)) {
+    for (key in config.getConfigurationSection("students")?.getKeys(false) ?: emptySet()) {
         val number = key.toIntOrNull() ?: continue
-        students[number] = config.getString(key) ?: continue
+        students[number] = config.getString("students.$key") ?: continue
     }
+    cheat = config.getString("cheat") ?: ""
+    amount = students.size
 }
