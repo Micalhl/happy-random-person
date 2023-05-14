@@ -94,10 +94,8 @@ private fun loadConfig() {
                 buffer.append(buffer0, 0, length)
             }
         }
-        content =  buffer.toString().trim { it <= ' ' } ?: ""
-        Configuration.loadFromString(content, type = Type.JSON).also {
-            it.saveToFile(file)
-        }
+        content = buffer.toString().trim { it <= ' ' }
+        Configuration.loadFromString(content, type = Type.JSON)
     } catch (_: IOException) {
         Configuration.empty(type = Type.JSON)
     } finally {
