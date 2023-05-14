@@ -51,6 +51,12 @@ compose.desktop {
             packageName = "happy-random-person"
             packageVersion = "1.1.0"
             windows.shortcut = true
+            windows {
+                iconFile.set(project.file("launcher/icon.ico"))
+            }
+            macOS {
+                iconFile.set(project.file("launcher/icon.icns"))
+            }
         }
     }
 }
