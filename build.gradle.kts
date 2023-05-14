@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "me.mical"
-version = "1.1"
+version = "1.1.0"
 
 repositories {
     google()
@@ -48,8 +48,8 @@ compose.desktop {
         mainClass = "me.mical.hrp.BootstrapKt"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "随机点名"
-            packageVersion = "1.0.2"
+            packageName = "happy-random-person"
+            packageVersion = "1.1.0"
             windows.shortcut = true
         }
     }
