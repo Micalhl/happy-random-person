@@ -37,12 +37,12 @@ jobs:
         run: ./gradlew packageMsi
       # 第四次构建
       - name: build (retry 3)
+        continue-on-error: true
         id: build_4
         if: steps.build_3.outcome == 'failure'
         run: ./gradlew packageMsi
       # 上传构建文件
       - name: capture build artifacts
-        continue-on-error: true
         uses: actions/upload-artifact@v2
         with:
           name: Artifacts
