@@ -9,10 +9,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.useResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.*
-import androidx.compose.ui.window.MenuBar
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import taboolib.common.util.random
@@ -46,9 +44,16 @@ fun Update() {
 @OptIn(ExperimentalUnitApi::class)
 @Composable
 @Preview
+fun Settings() {
+    // TODO
+}
+
+@OptIn(ExperimentalUnitApi::class)
+@Composable
+@Preview
 fun App() {
     var tasking = false
-    var text by remember { mutableStateOf("要点名了，别走神！") }
+    var text by remember { mutableStateOf(title.random()) }
     var button by remember { mutableStateOf("开始点名") }
     MaterialTheme {
         Column(modifier = Modifier.fillMaxWidth().fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -58,8 +63,8 @@ fun App() {
             Button(onClick = {
                 //
                 tasking = !tasking
-                if (::end.isInitialized && end.isNotEmpty()) {
-                    text = end
+                if (end != -1) {
+                    text = getStudent(end)
                 }
                 button = if (tasking) "停止点名" else "开始点名"
             }) {
@@ -69,7 +74,7 @@ fun App() {
             }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 Button(onClick = {
-                    students[students.size + 1] = cheat
+                    students[students.size + 1] = getStudent(cheat)
                 }) {
                     Text(
                         text = "千万别点"
@@ -84,7 +89,7 @@ fun App() {
                         }
                     }
                     delete.forEach { students.remove(it) }
-                    end = ""
+                    end = -1
                 }) {
                     Text(
                         text = "千万别点"
@@ -92,7 +97,7 @@ fun App() {
                 }
                 Spacer(Modifier.width(10.dp))
                 Button(onClick = {
-                    end = text
+                    end = getNum(text)
                 }) {
                     Text(
                         text = "千万别点"
@@ -103,7 +108,7 @@ fun App() {
     }
     Timer().schedule(timerTask {
         if (tasking) {
-            text = students[random(1, students.size)] ?: "没有录入学生"
+            text = getStudent(random(1, students.size))
         }
     }, 0, 50)
 }
@@ -111,16 +116,25 @@ fun App() {
 fun main() {
     loadConfig()
     application {
-        Window(onCloseRequest = ::exitApplication, title = "高一五班御用随机点名") {
+        Window(onCloseRequest = ::exitApplication, title = "高一五班御用随机点名", icon = painterResource("icon_512x512.png")) {
             App()
         }
     }
 }
 
+fun getNum(name: String): Int {
+    return students.filterKeys { it <= amount }.filterValues { it.contains(name) }.keys.first()
+}
+
+fun getStudent(num: Int): String {
+    return (students[num] ?: "没有录入学生").let { it.split("/").random() }
+}
+
 val students = ConcurrentHashMap<Int, String>()
-lateinit var cheat: String
+lateinit var title: List<String>
+var cheat: Int = -1
 var amount: Int = 0
-lateinit var end: String // initialize
+var end: Int = -1 // initialize
 
 private fun loadConfig() {
     val file = File(System.getProperty("user.home"), "hrp.json")
@@ -132,7 +146,7 @@ private fun loadConfig() {
     val remote = try {
         val timeout = 5000
         val url =
-            URL("https://mcstarrysky.oss-cn-beijing.aliyuncs.com/School/hrp.json")
+            URL("https://mcstarrysky.oss-cn-beijing.aliyuncs.com/School/hrp1.1.1.json")
         connection = url.openConnection() as HttpURLConnection
         connection.connectTimeout = timeout
         val buffer = StringBuilder(255)
@@ -157,10 +171,11 @@ private fun loadConfig() {
         remote.saveToFile(file)
         config.reload()
     }
+    title = config.getStringList("title")
     for (key in config.getConfigurationSection("students")?.getKeys(false) ?: emptySet()) {
         val number = key.toIntOrNull() ?: continue
         students[number] = config.getString("students.$key") ?: continue
     }
-    cheat = config.getString("cheat") ?: ""
+    cheat = config.getInt("cheat", -1)
     amount = students.size
 }

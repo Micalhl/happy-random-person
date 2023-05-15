@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "me.mical"
-version = "1.1.0"
+version = "1.1.1"
 
 repositories {
     google()
@@ -21,6 +21,7 @@ repositories {
 
 dependencies {
     commonMainImplementation("io.izzel.taboolib:common:6.0.10-95")
+    commonMainImplementation("io.izzel.taboolib:common-5:6.0.10-95")
     commonMainImplementation("io.izzel.taboolib:module-configuration:6.0.10-95")
     commonMainImplementation("com.electronwill.night-config:json:3.6.6")
     commonMainImplementation("com.electronwill.night-config:toml:3.6.6")
@@ -49,7 +50,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "happy-random-person"
-            packageVersion = "1.1.0"
+            packageVersion = "1.1.1"
             windows.shortcut = true
             windows {
                 iconFile.set(project.file("launcher/icon.ico"))
