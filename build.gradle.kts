@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "me.mical"
-version = "1.1.1"
+version = "1.2.0"
 
 repositories {
     google()
@@ -50,7 +50,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "happy-random-person"
-            packageVersion = "1.1.1"
+            packageVersion = "1.2.0"
             windows.shortcut = true
             windows {
                 iconFile.set(project.file("launcher/icon.ico"))

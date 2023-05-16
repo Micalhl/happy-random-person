@@ -1,19 +1,12 @@
 package me.mical.hrp
 
-import androidx.compose.material.MaterialTheme
-import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.*
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import taboolib.common.util.random
+import me.mical.hrp.window.About
+import me.mical.hrp.window.App
+import me.mical.hrp.window.MainTray
 import taboolib.module.configuration.Configuration
 import taboolib.module.configuration.Type
 import java.io.BufferedReader
@@ -23,9 +16,8 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.charset.StandardCharsets
-import java.util.Timer
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.concurrent.timerTask
+import kotlin.system.exitProcess
 
 /**
  * happy-random-person
@@ -34,90 +26,27 @@ import kotlin.concurrent.timerTask
  * @author xiaomu
  * @since 2023/2/23 7:59 PM
  */
-@OptIn(ExperimentalUnitApi::class)
-@Composable
-@Preview
-fun Update() {
-    // TODO
-}
-
-@OptIn(ExperimentalUnitApi::class)
-@Composable
-@Preview
-fun Settings() {
-    // TODO
-}
-
-@OptIn(ExperimentalUnitApi::class)
-@Composable
-@Preview
-fun App() {
-    var tasking = false
-    var text by remember { mutableStateOf(title.random()) }
-    var button by remember { mutableStateOf("开始点名") }
-    MaterialTheme {
-        Column(modifier = Modifier.fillMaxWidth().fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Spacer(Modifier.height(200.dp))
-            Text(text, style = TextStyle(fontSize = TextUnit(5f, TextUnitType.Em)))
-            Spacer(Modifier.height(150.dp))
-            Button(onClick = {
-                //
-                tasking = !tasking
-                if (end != -1) {
-                    text = getStudent(end)
-                }
-                button = if (tasking) "停止点名" else "开始点名"
-            }) {
-                Text(
-                    text = button
-                )
-            }
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                Button(onClick = {
-                    students[students.size + 1] = getStudent(cheat)
-                }) {
-                    Text(
-                        text = "千万别点"
-                    )
-                }
-                Spacer(Modifier.width(10.dp))
-                Button(onClick = {
-                    val delete = hashSetOf<Int>()
-                    for (key in students.keys()) {
-                        if (key > amount) {
-                            delete.add(key)
-                        }
-                    }
-                    delete.forEach { students.remove(it) }
-                    end = -1
-                }) {
-                    Text(
-                        text = "千万别点"
-                    )
-                }
-                Spacer(Modifier.width(10.dp))
-                Button(onClick = {
-                    end = getNum(text)
-                }) {
-                    Text(
-                        text = "千万别点"
-                    )
-                }
-            }
-        }
+val file = File(System.getProperty("user.home"), "hrp.lock")
+fun checkEnv(): Boolean {
+    return if (file.exists()) false else {
+        file.createNewFile()
+        file.deleteOnExit()
+        true
     }
-    Timer().schedule(timerTask {
-        if (tasking) {
-            text = getStudent(random(1, students.size))
-        }
-    }, 0, 50)
 }
 
 fun main() {
+    if (!checkEnv()) exitProcess(-1)
     loadConfig()
     application {
-        Window(onCloseRequest = ::exitApplication, title = "高一五班御用随机点名", icon = painterResource("icon_512x512.png")) {
+        val isMainWindowVisible = remember { mutableStateOf(true) }
+        val isAboutWindowVisible = remember { mutableStateOf(false) }
+        MainTray(isMainWindowVisible, isAboutWindowVisible)
+        Window(onCloseRequest = { isMainWindowVisible.value = false }, title = "高一五班御用随机点名", icon = painterResource("icon_512x512.png"), visible = isMainWindowVisible.value) {
             App()
+        }
+        Window(onCloseRequest = { isAboutWindowVisible.value = false }, title = "关于随机点名", icon = painterResource("icon_512x512.png"), visible = isAboutWindowVisible.value) {
+            About()
         }
     }
 }
