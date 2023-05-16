@@ -75,7 +75,7 @@ private fun loadConfig() {
     val remote = try {
         val timeout = 5000
         val url =
-            URL("https://mcstarrysky.oss-cn-beijing.aliyuncs.com/School/hrp1.1.1.json")
+            URL("https://mcstarrysky.oss-cn-beijing.aliyuncs.com/School/hrp1.2.0.json")
         connection = url.openConnection() as HttpURLConnection
         connection.connectTimeout = timeout
         val buffer = StringBuilder(255)
