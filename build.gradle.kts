@@ -25,6 +25,7 @@ dependencies {
     commonMainImplementation("io.izzel.taboolib:module-configuration:6.0.10-95")
     commonMainImplementation("com.electronwill.night-config:json:3.6.6")
     commonMainImplementation("com.electronwill.night-config:toml:3.6.6")
+    commonMainImplementation("org.apache.commons:commons-lang3:3.12.0")
 }
 
 kotlin {

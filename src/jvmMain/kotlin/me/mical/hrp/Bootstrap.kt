@@ -7,6 +7,7 @@ import androidx.compose.ui.window.application
 import me.mical.hrp.window.About
 import me.mical.hrp.window.App
 import me.mical.hrp.window.MainTray
+import taboolib.common5.FileWatcher
 import taboolib.module.configuration.Configuration
 import taboolib.module.configuration.Type
 import java.io.BufferedReader
@@ -28,7 +29,10 @@ import kotlin.system.exitProcess
  */
 val file = File(System.getProperty("user.home"), "hrp.lock")
 fun checkEnv(): Boolean {
-    return if (file.exists()) false else {
+    return if (file.exists()) {
+        file.writeText(System.currentTimeMillis().toString())
+        false
+    } else {
         file.createNewFile()
         file.deleteOnExit()
         true
@@ -41,6 +45,11 @@ fun main() {
     application {
         val isMainWindowVisible = remember { mutableStateOf(true) }
         val isAboutWindowVisible = remember { mutableStateOf(false) }
+        FileWatcher.INSTANCE.addSimpleListener(file) {
+            if (!isMainWindowVisible.value) {
+                isMainWindowVisible.value = true
+            }
+        }
         MainTray(isMainWindowVisible, isAboutWindowVisible)
         Window(onCloseRequest = { isMainWindowVisible.value = false }, title = "高一五班御用随机点名", icon = painterResource("icon_512x512.png"), visible = isMainWindowVisible.value) {
             App()

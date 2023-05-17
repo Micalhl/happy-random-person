@@ -23,11 +23,8 @@ fun About() {
         Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
             Text("由高一五班全体同学制作，Logo（即班徽）由雷佳绘制。")
             Text("Made it with ❤️.")
-            Text("Copyright © 2022-2023 Mical. All Rights Reserved.")
-            Text("Logo by Lei Jia.")
-            Text(" ")
+            Text("Copyright © 2022-2023 Mical. All Rights Reserved. Logo by Lei Jia.")
             Text("Source code: https://github.com/Micalhl/happy-random-person")
-            Text(" ")
             Text("Licence:")
             Text("""
                 MIT License
@@ -52,6 +49,9 @@ fun About() {
                 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
                 SOFTWARE.
             """.trimIndent())
+            Text(" ")
+            Text("This project uses TabooLib open-source library, link: https://github.com/TabooLib/TabooLib")
+            Text("This project uses Compose-MultiPlatform open-source library, link: https://github.com/jetbrains/compose-multiplatform/")
         }
     }
 }
