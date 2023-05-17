@@ -43,7 +43,7 @@ fun main() {
     try {
         socket = ServerSocket(socketPort)
     } catch (ex: IOException) {
-        if (ex.message?.contains("Address already in use: $socketPort") == true) {
+        if (ex.message?.contains("Address already in use") == true) {
             exitProcess(0)
         }
     }
