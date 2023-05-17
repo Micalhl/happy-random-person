@@ -42,7 +42,7 @@ fun main() {
     checkEnvironment()
     try {
         socket = ServerSocket(socketPort)
-    } catch (ex: Throwable) {
+    } catch (ex: IOException) {
         if (ex.message?.contains("Address already in use: $socketPort") == true) {
             exitProcess(0)
         }
