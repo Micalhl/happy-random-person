@@ -15,6 +15,7 @@ import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
+import java.net.ServerSocket
 import java.net.URL
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.ConcurrentHashMap
@@ -28,19 +29,24 @@ import kotlin.system.exitProcess
  * @since 2023/2/23 7:59 PM
  */
 val file = File(System.getProperty("user.home"), "hrp.lock")
-fun checkEnv(): Boolean {
-    return if (file.exists()) {
+
+fun checkEnvironment() {
+    if (file.exists()) {
         file.writeText(System.currentTimeMillis().toString())
-        false
     } else {
         file.createNewFile()
-        file.deleteOnExit()
-        true
     }
 }
 
 fun main() {
-    if (!checkEnv()) exitProcess(-1)
+    checkEnvironment()
+    try {
+        socket = ServerSocket(socketPort)
+    } catch (ex: Throwable) {
+        if (ex.message?.contains("Address already in use: $socketPort") == true) {
+            exitProcess(0)
+        }
+    }
     loadConfig()
     application {
         val isMainWindowVisible = remember { mutableStateOf(true) }
@@ -73,6 +79,8 @@ lateinit var title: List<String>
 var cheat: Int = -1
 var amount: Int = 0
 var end: Int = -1 // initialize
+var socketPort: Int = 10086 // 学校电脑用, 不需要考虑太多
+lateinit var socket: ServerSocket
 
 private fun loadConfig() {
     val file = File(System.getProperty("user.home"), "hrp.json")
