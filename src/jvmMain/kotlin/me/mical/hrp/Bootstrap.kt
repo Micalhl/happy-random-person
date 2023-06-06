@@ -57,7 +57,7 @@ fun main() {
             }
         }
         MainTray(isMainWindowVisible, isAboutWindowVisible)
-        Window(onCloseRequest = { isMainWindowVisible.value = false }, title = "高一五班御用随机点名", icon = painterResource("icon_512x512.png"), visible = isMainWindowVisible.value) {
+        Window(onCloseRequest = { isMainWindowVisible.value = false }, title = "吕老师御用随机点名", icon = painterResource("icon_512x512.png"), visible = isMainWindowVisible.value) {
             App()
         }
         Window(onCloseRequest = { isAboutWindowVisible.value = false }, title = "关于随机点名", icon = painterResource("icon_512x512.png"), visible = isAboutWindowVisible.value) {
@@ -92,7 +92,7 @@ private fun loadConfig() {
     val remote = try {
         val timeout = 5000
         val url =
-            URL("https://mcstarrysky.oss-cn-beijing.aliyuncs.com/School/hrp1.2.0.json")
+            URL("https://mcstarrysky.oss-cn-beijing.aliyuncs.com/School/mszx/lvwei.json")
         connection = url.openConnection() as HttpURLConnection
         connection.connectTimeout = timeout
         val buffer = StringBuilder(255)
