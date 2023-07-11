@@ -21,9 +21,9 @@ import androidx.compose.ui.Modifier
 fun About() {
     MaterialTheme {
         Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
-            Text("2022届九年四班侯林制作，吕老师专用。")
+            Text("由高一五班全体同学制作，Logo（即班徽）由雷佳绘制。")
             Text("Made it with ❤️.")
-            Text("Copyright © 2022-2023 Mical. All Rights Reserved.")
+            Text("Copyright © 2022-2023 Mical. All Rights Reserved. Logo by Lei Jia.")
             Text("Source code: https://github.com/Micalhl/happy-random-person")
             Text("Licence:")
             Text("""
