@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - 周老师
 jobs:
   build:
     runs-on: windows-latest
